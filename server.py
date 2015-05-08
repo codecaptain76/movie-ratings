@@ -2,7 +2,7 @@
 
 from jinja2 import StrictUndefined
 
-from flask import Flask, render_template, redirect, request, flash, session
+from flask import Flask, render_template, redirect, request, flash, session as browser_session
 from flask_debugtoolbar import DebugToolbarExtension
 
 from model import User, Rating, Movie, connect_to_db, db
@@ -23,50 +23,74 @@ def index():
 
     return render_template("homepage.html")
 
-@app.route("/registration", methods=['POST'])
+@app.route("/register", methods=['POST'])
 def register_user():
     """Send the user to a registration form."""
 
-    return render_template("registration.html")
+    return render_template("register.html")
 
 
-  # #if the form data is identical to an existing user_id's values, send to login
-    user_lib = 
-    email = request.form['email']    
-    password = request.form['password']    
-    age = request.form['age']
-    zipcode = request.form['zipcode']   
-
-    if email, password, age, zipcode in db,
-        return render_template("login_form")
-    else:
-        return add_user()
-
-
-@app.route("/login_form", methods=['POST'])
-def add_user():
+   
+#@app.route("/add_user", methods=['POST'])
+def add_to_db_User():
     """Adds the user to the database if not already existing"""
+    #
+    #db.session.add()
+    # db.session.commit()
+    redirect("/")
 
-    User(email=request.form['email'], password=request.form['password'], 
-        age=request.form['age'], zipcode=request.form['zipcode'])
-    db.session.add()
 
 
-@app.route("/login_form", methods=['POST'])
-def login():
-    """Send the user to an email/password form."""
+@app.route("/login_form", methods=['GET'])
+def add_user():
 
     return render_template("login_form.html")
+    
 
 
-@app.route("/user_list")
+@app.route("/login_submit", methods=['POST'])
+def login():
+    """Send the user to an email/password form."""
+    #add the user id to the session
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    if email == User.query.get('email') and password == User.query.get('password'):
+
+        if email in browser_session:
+            browser_session['email'] = email
+            browser_session['password'] = request.form['password']
+            flash("You are now logged in")
+            redirect("/")
+        else:
+            flash("You are not logged in")
+            redirect("/login_form")
+
+
+
+
+    # if request.form.get('email') != 'users':
+    #     flash("Invalid login") #do you want to 1. retry? or do you want to 2. register as 
+    #     #a new user??
+    #     redirect("/login_form")
+    # else: 
+    #     email = request.form.get("email")
+    #     registration_info = authenticate(email)
+    #     if registration_info:
+    #         session['registration_info'] = registration_info
+    #         flash("You are logged in!")
+    #         redirect("/")
+
+
+
+@app.route("/users")
 def user_list():
     """Show list of users"""
 
     users = User.query.all()
     return render_template("user_list.html", users=users)
 
-@app.route("/user", method=['POST'])
+@app.route("/user", methods=['POST'])
 def user_info():
     """Show information about a particular user, including 
     age
@@ -77,7 +101,7 @@ def user_info():
 
     # use information of input email and password and check to see if in database
 
-    return render_template("user.html", firstname)
+    return render_template("user.html", firstname=firstname)
 
 
 

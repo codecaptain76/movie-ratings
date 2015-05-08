@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Welcome!</h1>
+<h4>Please login to continue</h4>
+<form action="/login_submit" method="POST">
+    <label>Email: 
+        <input type="text" name="email">
+    </label>
+    <br>
+    <label>Password:
+        <input type="text" name="email">
+    </label>
+    <br>
+    <input type="submit" value="Login!">
+    <br>
+    <br>
+    <br>
+    <br>
+</form>
+
+
+<form action="/register" method="POST">
+
+    <input type="checkbox" value="new_user" name="new_user">I am a new user. I would like to register.
+    <br>
+    <input type="submit" value="Take me to registration!">
+</form>
+{% endblock %}

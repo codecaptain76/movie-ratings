@@ -58,7 +58,10 @@ class Rating(db.Model):
 
     #May 6 Define relationship to user
     user = db.relationship("User",
-                            backref=db.backref("ratings", order_by=rating_id)) 
+                            backref="ratings")
+                            # db.backref(
+                                # "ratings"
+                                # , order_by=rating_id)) 
 
     #May 6 Define relationship to movie
     movie = db.relationship("Movie", 
